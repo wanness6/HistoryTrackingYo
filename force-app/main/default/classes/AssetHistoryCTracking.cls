@@ -7,7 +7,7 @@ public with sharing class AssetHistoryCTracking {
 
 
 
-        YEPS__c fieldsToSave = [SELECT fields__c FROM YEPS__c LIMIT 1];
+        TrackingSettings__c fieldsToSave = [SELECT fields__c FROM TrackingSettings__c LIMIT 1];
         List<String> fieldsToSaveList = new List<String>();
 
         List<String> splitFieldsToSave = fieldsToSave.fields__c.split(';');
