@@ -1,18 +1,28 @@
-import { LightningElement, wire } from 'lwc';
-import OBJECTNAME from '@salesforce/schema/Asset_History__c.Object_Name__c';
-import FIELDNAME from '@salesforce/schema/Asset_History__c.Field_Name__c';
-import OLD_VALUE from '@salesforce/schema/Asset_History__c.OldValue__c';
-import NEW_VALUE from '@salesforce/schema/Asset_History__c.NewValue__c';
-import getAssetHistory from '@salesforce/apex/AssetHistory.getAssetHistory';
-const COLUMNS = [
-    { label: 'Object Name', fieldName: OBJECTNAME.fieldApiName, type: 'text' },
-    { label: 'Field Name', fieldName: FIELDNAME.fieldApiName, type: 'text' },
-    { label: 'Old value', fieldName: OLD_VALUE.fieldApiName, type: 'text' },
-    { label: 'New value', fieldName: NEW_VALUE.fieldApiName, type: 'text' }
+import { LightningElement, wire, api } from 'lwc';
+import { deleteRecord } from 'lightning/uiRecordApi';
+import { refreshApex } from '@salesforce/apex';
 
-];
+import getAssetHistory from '@salesforce/apex/AssetHistory.getAssetHistory';
 export default class historyTracking extends LightningElement {
-    columns = COLUMNS;
-    @wire(getAssetHistory)
-    assetHistory;
+    @wire(getAssetHistory) assetHistory;
+    @api recordId;
+    @api error;
+
+    //zorgt ervoor dat we weten welke record aangeduidt is.
+    handleChange(event){
+        this.recordId = event.target.value;
+        console.log('@@@current RecordId@@@'+this.recordId);
+    }
+
+    //delete de record die aangeduidt is.
+    handleDelete(){
+        deleteRecord(this.recordId)
+        .then(() => {
+            return refreshApex(this.assetHistory);
+        })
+        .catch((error) => {
+           this.error=error;
+           console.log('unable to delete the record due to'+JSON.stringify(this.error));
+        });
+    }
 }

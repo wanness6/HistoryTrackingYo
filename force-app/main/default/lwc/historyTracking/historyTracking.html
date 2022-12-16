@@ -1,12 +1,42 @@
 <template>
-    <lightning-card>
-        <template if:true={assetHistory.data}>
-            <lightning-datatable
-                key-field="Id"
-                data={assetHistory.data}
-                columns={columns} 
-            >
-           </lightning-datatable>
+    <lightning-button label="Delete" variant="brand" value={recordId} onclick={handleDelete}>
+    </lightning-button>
+    <table  class="slds-table slds-table_cell-buffer slds-table_header-hidden">
+        <tr>
+            <td><b>Select</b></td>
+            <td><b>Object</b></td>
+            <td><b>Field</b></td>
+            <td><b>Old value</b></td>
+            <td><b>New Value</b></td>
+            <td><b>Created on</b></td>
+        </tr>
+        <template for:each={assetHistory.data}  for:item="acc">
+            <tr key={acc.Id}>
+                <td>
+                    <lightning-input type="radio" name="radioButton" value={acc.Id} onchange={handleChange}>
+                    </lightning-input>
+                </td>
+                <td>
+                    {acc.Object_Name__c}
+                </td>
+                <td>
+                    {acc.Field_Name__c}
+                </td>
+                <td>
+                    {acc.OldValue__c}
+                </td>
+                <td>
+                    {acc.NewValue__c}
+                </td>
+                <td>
+                    {acc.Created_date__c}
+                </td>
+
+            </tr>
+
         </template>
-    </lightning-card>
+
+
+    </table>
+    
 </template>
