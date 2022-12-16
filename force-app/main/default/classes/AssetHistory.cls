@@ -4,7 +4,6 @@ public with sharing class AssetHistory {
         List<Asset_History__c> acclist = [
             SELECT Id, Object_Name__c, Field_Name__c, OldValue__c, NewValue__c, Created_date__c
             FROM Asset_History__c
-            WITH SECURITY_ENFORCED
         ];
         return acclist;
     }
